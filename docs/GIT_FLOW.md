@@ -25,6 +25,25 @@ feature/auth-board
 feature/chat
 - Chat rooms and real-time messages
 - Owner: 재용
+
+feature/frontend
+- Frontend screens and API integration
+- Owner: frontend team
+```
+
+## Why Develop Exists
+
+`develop` is the integration branch. Backend and frontend developers should not work directly on `develop`, but they should merge completed feature work into it through Pull Requests.
+
+This lets the team test whether separate features work together before merging into `main`.
+
+```text
+feature/db-docker -> develop
+feature/auth-board -> develop
+feature/chat -> develop
+feature/frontend -> develop
+
+develop -> main
 ```
 
 ## Working Rules
@@ -42,6 +61,7 @@ feature/chat
 feat: add login api
 feat: create post entity
 feat: add docker compose for database
+feat: add frontend board page
 fix: resolve database connection error
 docs: update api specification
 chore: update project settings
@@ -59,6 +79,7 @@ The first milestone focuses on the minimum backend required for frontend integra
 - Chat room enter
 - Real-time message send/receive
 - Message persistence
+- Frontend API integration
 ```
 
 Features such as payment, notification, image upload, and read receipts are planned for later milestones.

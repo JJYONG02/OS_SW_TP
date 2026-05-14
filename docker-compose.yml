@@ -1,0 +1,73 @@
+services:
+  user-db:
+    image: postgres:16-alpine
+    container_name: user-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${USER_DB_NAME}
+      POSTGRES_USER: ${USER_DB_USER}
+      POSTGRES_PASSWORD: ${USER_DB_PASSWORD}
+    ports:
+      - "5432:5432"
+    volumes:
+      - user-db-data:/var/lib/postgresql/data
+      - ./docker/user-db/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - trade-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${USER_DB_USER} -d ${USER_DB_NAME}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  wallet-db:
+    image: postgres:16-alpine
+    container_name: wallet-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${WALLET_DB_NAME}
+      POSTGRES_USER: ${WALLET_DB_USER}
+      POSTGRES_PASSWORD: ${WALLET_DB_PASSWORD}
+    ports:
+      - "5433:5432"
+    volumes:
+      - wallet-db-data:/var/lib/postgresql/data
+      - ./docker/wallet-db/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - trade-network
+    healthcheck:
+      test:
+        ["CMD-SHELL", "pg_isready -U ${WALLET_DB_USER} -d ${WALLET_DB_NAME}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  post-db:
+    image: postgres:16-alpine
+    container_name: post-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POST_DB_NAME}
+      POSTGRES_USER: ${POST_DB_USER}
+      POSTGRES_PASSWORD: ${POST_DB_PASSWORD}
+    ports:
+      - "5434:5432"
+    volumes:
+      - post-db-data:/var/lib/postgresql/data
+      - ./docker/post-db/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - trade-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POST_DB_USER} -d ${POST_DB_NAME}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  user-db-data:
+  wallet-db-data:
+  post-db-data:
+
+networks:
+  trade-network:
+    driver: bridge
